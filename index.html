@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Be My Valentine ❤️</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* HEARTS */
+  .heart {
+    position: absolute;
+    bottom: -50px;
+    width: 30px;
+    height: 30px;
+    background: red;
+    transform: rotate(-45deg);
+    animation: floatUp linear infinite;
+    opacity: 0.7;
+  }
+
+  .heart::before,
+  .heart::after {
+    content: "";
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: inherit;
+    border-radius: 50%;
+  }
+
+  .heart::before { top: -15px; left: 0; }
+  .heart::after { left: 15px; top: 0; }
+
+  @keyframes floatUp {
+    to {
+      transform: translateY(-120vh) rotate(-45deg);
+    }
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    width: 420px;              /* BIGGER CARD */
+    padding: 50px 40px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    z-index: 5;
+  }
+
+  h1 {
+    margin: 0 0 50px;          /* SPACE FOR YES TO GROW */
+    color: #ff4d6d;
+    font-size: 28px;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  button {
+    height: 56px;
+    border-radius: 999px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  #yes {
+    background: #ff4d6d;
+    color: white;
+    width: 140px;
+    max-width: 320px; /* NEVER exceed card */
+  }
+
+  #no {
+    background: #ddd;
+    color: #555;
+    width: 120px;
+    position: relative;
+  }
+
+  #message {
+    display: none;
+    margin-top: 30px;
+    font-size: 22px;
+    color: #ff4d6d;
+    line-height: 1.4;
+  }
+
+  /* CONFETTI */
+  .confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    animation: fall 3s linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(120vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0f7aeb6e36.mp3" type="audio/mpeg">
+</audio>
+
+<div id="hearts"></div>
+
+<div class="card">
+  <h1>Will you be my Valentine? ❤️</h1>
+
+  <div class="buttons">
+    <button id="yes">YES 💘</button>
+    <button id="no">NO 🙃</button>
+  </div>
+
+  <div id="message">
+    YAYYYY 😍💍<br>
+    Dinner’s on me when we meet 🍽️❤️
+  </div>
+</div>
+
+<script>
+  /* FLOATING HEARTS */
+  const colors = ["#ff4d6d", "#ff6b6b", "#f72585", "#ff8fab"];
+  const hearts = document.getElementById("hearts");
+
+  for (let i = 0; i < 15; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.style.left = Math.random() * 100 + "vw";
+    h.style.background = colors[Math.floor(Math.random() * colors.length)];
+    h.style.animationDuration = 8 + Math.random() * 6 + "s";
+    h.style.animationDelay = Math.random() * 5 + "s";
+    hearts.appendChild(h);
+  }
+
+  /* BUTTON LOGIC */
+  const yes = document.getElementById("yes");
+  const no = document.getElementById("no");
+  const msg = document.getElementById("message");
+  const music = document.getElementById("music");
+
+  let yesWidth = 140;
+  const MAX_WIDTH = 320;
+
+  no.addEventListener("mouseenter", () => {
+    // NO becomes unclickable
+    no.style.pointerEvents = "none";
+
+    // Move NO randomly on screen
+    no.style.position = "fixed";
+    no.style.left = Math.random() * (window.innerWidth - 150) + "px";
+    no.style.top = Math.random() * (window.innerHeight - 80) + "px";
+
+    // Grow YES safely
+    if (yesWidth < MAX_WIDTH) {
+      yesWidth += 20;
+      yes.style.width = yesWidth + "px";
+    }
+  });
+
+  yes.addEventListener("click", () => {
+    music.play();
+    yes.style.display = "none";
+    no.style.display = "none";
+    msg.style.display = "block";
+    launchConfetti();
+  });
+
+  function launchConfetti() {
+    for (let i = 0; i < 120; i++) {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.top = "-10px";
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 3000);
+    }
+  }
+</script>
+
+</body>
+</html>
